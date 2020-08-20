@@ -12,10 +12,15 @@ import click
 def start_project(name, directory):
     project_root = os.path.join(directory, name)
     try:
-        os.mkdir(project_root)
+        os.makedirs(project_root)
     except FileExistsError:
-        click.echo(f'`{project_root}` allready exists')
+        click.echo(f'`{project_root}` already exists')
+    except OSError as e:
+        click.echo(e)
 
+    template_dir = os.path.join(os.path.dirname(__file__),
+                                'conf/project_template')
+    # for root, dirs, files in os.walk():
 
 
 
