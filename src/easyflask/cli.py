@@ -58,6 +58,7 @@ def start_project(name, directory):
         f.write(app_init_file)
 
     # TODO: try jinja2
+    # TODO: from easyflask import RESTful, reqparse......
 
 
 if __name__ == '__main__':
