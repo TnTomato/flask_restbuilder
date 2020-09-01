@@ -1,0 +1,13 @@
+from flask import Flask{% if swagger_needed %}
+from flasgger import Swagger{% endif %}
+
+from config import configs
+
+
+def create_app(config_name='debugging'):
+    app = Flask(__name__)
+    app.config.from_object(configs[config_name])
+{% if swagger_needed %}
+    Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}
+    return app
+

@@ -1,0 +1,84 @@
+import logging
+import os
+
+# Some of the path variables of the project
+CONFIG_PATH = os.path.abspath(__file__)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(CONFIG_PATH)))
+
+
+class BaseConfig(object):
+    """This class is for some basic configurations of the project.
+    Projects usually run in different environments like 'debugging',
+    'testing', 'release' and 'production'. One sub-class is prepared
+    for each environment. Remember never to mix them up. You can take
+    this as a base class and create more environments if you want.
+    """
+    PRODUCT = False
+    DEBUG = False
+    TESTING = False
+
+    # Make sure to use SECRET_KEY everywhere in your project
+    SECRET_KEY = '{{ secret_key }}'
+
+    LOG_LEVEL = logging.DEBUG{% if swagger_needed %}
+
+    SWAGGER = {
+        'title': '{{ project_name }} API',
+    }
+    FLASGGER_TEMPLATE = {
+        'swagger': '2.0',
+        'info': {
+            'title': '{{ project_name }}',
+            'description': 'API of {{ project_name }}',
+            'version': '2.0'
+        },
+        'host': '127.0.0.1:5000',
+        'schemes': [
+            'http'
+        ]
+    }{% endif %}
+
+
+class DebugConfig(BaseConfig):
+    """This is for debugging environment"""
+    DEBUG = True
+
+    # Flask-SQLAlchemy settings
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///'
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_ECHO = True{% if redis_needed %}
+
+    # Redis settings
+    REDIS_CONFIG = {
+        'CACHE_TYPE': 'redis',
+        'CACHE_KEY_PREFIX': '{{ project_name }}:',
+        'CACHE_DEFAULT_TIMEOUT': 60,
+        'CACHE_REDIS_HOST': 'localhost',
+        'CACHE_REDIS_PORT': 6379,
+        'CACHE_REDIS_PASSWORD': '',
+        'CACHE_REDIS_DB': 0
+    }{% endif %}
+
+
+class TestConfig(BaseConfig):
+    """This is for testing environment"""
+    TESTING = True
+
+
+class ReleaseConfig(BaseConfig):
+    """This is for release environment"""
+    PRODUCT = True
+
+
+class ProductConfig(BaseConfig):
+    """This is for production environment"""
+    PRODUCT = True
+
+
+configs = {
+    'debugging': DebugConfig,
+    'testing': TestConfig,
+    'release': ReleaseConfig,
+    'production': ProductConfig
+}
+
