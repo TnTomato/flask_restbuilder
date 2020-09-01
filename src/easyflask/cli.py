@@ -13,7 +13,9 @@ def start_project(name, directory):
     project_root = os.path.join(directory, name)
     src_project_root = os.path.join(directory, f'src/{name}')
 
-    # TODO: use jinja2
+    app_root = os.path.join(src_project_root, 'app')
+    extension_root = os.path.join(src_project_root, f'extension')
+
     try:
         os.makedirs(app_root)
         os.makedirs(extension_root)
@@ -21,6 +23,8 @@ def start_project(name, directory):
         click.echo(f'`{project_root}` already exists')
     except OSError as e:
         click.echo(e)
+
+    # TODO: try jinja2
 
 
 if __name__ == '__main__':
