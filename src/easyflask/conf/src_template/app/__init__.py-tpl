@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from flask import Flask{% if swagger_needed %}
 from flasgger import Swagger{% endif %}
 
@@ -9,5 +11,12 @@ def create_app(config_name='debugging'):
     app.config.from_object(configs[config_name])
 {% if swagger_needed %}
     Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}
+
+    blueprints = []
+    def register_bps(bps):
+        for bp in bps:
+            app.register_blueprint(getattr(import_module('app.test'), bp))
+    register_bps(blueprints)
+
     return app
 

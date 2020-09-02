@@ -1,0 +1,9 @@
+from flask import Blueprint
+from flask_restful import Api
+
+{{ module_name }}_bp = Blueprint('{{ module_name }}', __name__, url_prefix='/{{ module_name }}')
+
+api = Api({{ module_name }}_bp, catch_all_404s=True)
+
+from app.{{ module_name }} import routes
+

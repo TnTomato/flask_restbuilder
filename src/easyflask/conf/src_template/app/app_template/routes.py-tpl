@@ -1,0 +1,3 @@
+# use api.add_resource() to define routes
+from app.{{ module_name }} import api
+

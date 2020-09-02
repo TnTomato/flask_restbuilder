@@ -1,0 +1,62 @@
+import datetime
+
+from bson.objectid import ObjectId
+from flask_sqlalchemy import SQLAlchemy, BaseQuery
+from sqlalchemy.sql import column
+
+
+class CustomQuery(BaseQuery):
+    """Rewrite some query methods to auto update some basic database fields.
+
+    **Warning**::
+        delete() is not rewritten, it will truly remove data from database.
+    """
+
+    def filter(self, *criterion):
+        flag = False
+        for i in list(criterion):
+            if str(i.left).split('.')[-1] == 'is_enable':
+                flag = True
+                break
+        if not flag:
+            criterion = criterion + (column('is_enable') == True,)
+        return super(CustomQuery, self).filter(*criterion)
+
+    def filter_by(self, **kwargs):
+        if 'is_enable' not in kwargs.keys():
+            kwargs['is_enable'] = True
+        return super(CustomQuery, self).filter_by(**kwargs)
+
+    def update(self, values, synchronize_session="evaluate", update_args=None):
+        now_time = datetime.datetime.now()
+        values['updated_on'] = now_time.strftime('%Y-%m-%d %H:%M:%S')
+        return super(CustomQuery, self).update(values,
+                                               synchronize_session,
+                                               update_args)
+
+
+db = SQLAlchemy(query_class=CustomQuery)
+
+
+class MySQLBaseModel(db.Model):
+    """Base Model of SQLAlchemy. Custom any field if you want."""
+    __abstract__ = True
+
+    id = db.Column(db.String(24), nullable=False, primary_key=True)
+    is_enable = db.Column(db.Boolean(), nullable=False, default=True)
+    created_on = db.Column(db.String(19), nullable=False)
+    updated_on = db.Column(db.String(19), nullable=True, default=None)
+
+    def __init__(self):
+        if not self.id:
+            self.id = str(ObjectId())
+        if not self.created_on:
+            now_time = datetime.datetime.now()
+            self.created_on = now_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    def bulk_delete(self, pks, sync_session=False):
+        db.session \
+            .query(self.__class__) \
+            .filter(self.__class__.id.in_(pks)) \
+            .update({'is_enable': False}, synchronize_session=sync_session)
+

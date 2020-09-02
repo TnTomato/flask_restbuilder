@@ -1,0 +1,3 @@
+# Defint class API from RESTful everywhere
+from easyflask import RESTful
+

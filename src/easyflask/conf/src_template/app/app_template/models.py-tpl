@@ -1,0 +1,3 @@
+# define models here
+from extension.mysql import db, MySQLBaseModel
+
