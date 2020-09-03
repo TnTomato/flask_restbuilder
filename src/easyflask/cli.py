@@ -39,6 +39,7 @@ def create_from_template(path, tplenv, tplname, filename=None, **kwargs):
 
 
 def create_modules(app_path, module_names, *tplnames):
+    # TODO: add module_names to create_app
     api_path = os.path.join(app_path, 'api')
     for module_name in module_names:
         module_dir = os.path.join(app_path, module_name)

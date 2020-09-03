@@ -11,3 +11,5 @@
 """
 from .exceptions import *
 from .views import RESTful
+
+__version__ = "0.1.0.dev"
