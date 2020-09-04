@@ -2,8 +2,11 @@ import re
 
 from setuptools import find_packages, setup
 
-with open("src/easyflask/__init__.py", encoding="utf-8") as f:
-    version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
+with open('README.rst', 'rt', encoding='utf-8') as f:
+    readme = f.read()
+
+with open('src/easyflask/__init__.py', 'rt', encoding="utf-8") as f:
+    version = re.search(r"__version__ = '(.*?)'", f.read()).group(1)
 
 setup(
     name='easyflask',
@@ -16,6 +19,7 @@ setup(
     author_email='474093103@qq.com',
     maintainer='TnTomato',
     description='A microframework makes building RESTful API projects easier.',
+    long_description=readme,
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
