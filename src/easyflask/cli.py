@@ -93,7 +93,7 @@ def _create_modules(app_path, module_names, *tplnames):
         f.write(replaced)
 
 
-@click.command('startproject', short_help='Create a Flask RESTful API project.')
+@click.command('start', short_help='Create a Flask RESTful API project.')
 @click.option('--name', '-n',  prompt='What is your project\'s name?',
               default='myeasyflask', help='The project\'s name.')
 @click.option('--directory',
