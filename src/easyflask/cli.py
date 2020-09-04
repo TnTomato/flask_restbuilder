@@ -10,6 +10,8 @@
 """
 import base64
 import os
+import sys
+from importlib import import_module
 
 import click
 from jinja2 import Environment, FileSystemLoader
@@ -27,6 +29,21 @@ SRC_ENV = Environment(loader=FileSystemLoader(SRC_TPL_DIR))
 PROJECT_ENV = Environment(loader=FileSystemLoader(PROJECT_TPL_DIR))
 APP_ENV = Environment(loader=FileSystemLoader(APP_TPL_DIR))
 API_ENV = Environment(loader=FileSystemLoader(API_TPL_DIR))
+
+
+def _check_project_name(name):
+    if not name.isidentifier():
+        click.echo(f'{name} is not a valid name.')
+        sys.exit(0)
+
+    try:
+        import_module(name)
+    except ImportError:
+        pass
+    else:
+        click.echo(f'{name} is conflict with the name of an existing Python '
+                   f'module.')
+        sys.exit(0)
 
 
 def _create_folders(*folders):
@@ -49,8 +66,8 @@ def _create_from_template(path, tplenv, tplname, filename=None, **kwargs):
 
 
 def _create_modules(app_path, module_names, *tplnames):
-    # TODO: add module_names to create_app
     api_path = os.path.join(app_path, 'api')
+    init_path = os.path.join(app_path, '__init__.py')
     for module_name in module_names:
         module_dir = os.path.join(app_path, module_name)
         try:
@@ -68,6 +85,13 @@ def _create_modules(app_path, module_names, *tplnames):
             content = dict(module_name=module_name)
             _create_from_template(module_dir, APP_ENV, tplname, **content)
 
+    with open(init_path, 'r', encoding='utf-8') as f:
+        file = f.read()
+        replaced = file.replace('blueprints = []',
+                                f'blueprints = {str(module_names)}')
+    with open(init_path, 'w', encoding='utf-8') as f:
+        f.write(replaced)
+
 
 @click.command('startproject', short_help='Create a Flask RESTful API project.')
 @click.option('--name', '-n',  prompt='What is your project\'s name?',
@@ -84,6 +108,7 @@ def _create_modules(app_path, module_names, *tplnames):
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def main(name, directory, modules, swagger):
+    _check_project_name(name)
     module_names = modules.split(' ')
     swagger_needed = True if swagger == 'y' else False
 
