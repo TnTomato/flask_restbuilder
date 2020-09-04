@@ -11,6 +11,7 @@ with open('src/easyflask/__init__.py', 'rt', encoding="utf-8") as f:
 setup(
     name='easyflask',
     version=version,
+    url='https://github.com/TnTomato/easyflask',
     project_urls={
       'Code': 'https://github.com/TnTomato/easyflask'
     },
