@@ -14,21 +14,11 @@ import sys
 from importlib import import_module
 
 import click
-from jinja2 import Environment, FileSystemLoader
-
-# some directories and paths of the project
-FILE_PATH = os.path.abspath(__file__)
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(FILE_PATH)))
-PROJECT_TPL_DIR = os.path.join(ROOT_DIR, 'src/easyflask/conf/project_template')
-SRC_TPL_DIR = os.path.join(ROOT_DIR, 'src/easyflask/conf/src_template')
-APP_TPL_DIR = os.path.join(SRC_TPL_DIR, 'app/app_template')
-API_TPL_DIR = os.path.join(SRC_TPL_DIR, 'app/api_template')
+from jinja2 import Environment, PackageLoader
 
 # jinjia2 environments
-SRC_ENV = Environment(loader=FileSystemLoader(SRC_TPL_DIR))
-PROJECT_ENV = Environment(loader=FileSystemLoader(PROJECT_TPL_DIR))
-APP_ENV = Environment(loader=FileSystemLoader(APP_TPL_DIR))
-API_ENV = Environment(loader=FileSystemLoader(API_TPL_DIR))
+PROJECT_ENV = Environment(loader=PackageLoader('tpls', 'project_template'))
+SRC_ENV = Environment(loader=PackageLoader('tpls', 'src_template'))
 
 
 def _check_project_name(name):
@@ -77,13 +67,23 @@ def _create_modules(app_path, module_names, *tplnames):
         except OSError as e:
             click.echo(e)
 
-        _create_from_template(api_path, API_ENV, '__init__.py-tpl')
-        _create_from_template(
-            api_path, API_ENV, 'app_api.py-tpl', f'{module_name}.py')
+        _create_from_template(api_path,
+                              SRC_ENV,
+                              'app/api_template/__init__.py-tpl',
+                              '__init__.py')
+        _create_from_template(api_path,
+                              SRC_ENV,
+                              'app/api_template/app_api.py-tpl',
+                              f'{module_name}.py')
 
         for tplname in tplnames:
             content = dict(module_name=module_name)
-            _create_from_template(module_dir, APP_ENV, tplname, **content)
+            file_name = tplname.split('/')[-1].split('-')[0]
+            _create_from_template(module_dir,
+                                  SRC_ENV,
+                                  tplname,
+                                  file_name,
+                                  **content)
 
     with open(init_path, 'r', encoding='utf-8') as f:
         file = f.read()
@@ -93,11 +93,15 @@ def _create_modules(app_path, module_names, *tplnames):
         f.write(replaced)
 
 
-@click.command('start', short_help='Create a Flask RESTful API project.')
-@click.option('--name', '-n',  prompt='What is your project\'s name?',
+@click.group()
+def main():
+    pass
+
+
+@main.command('start', short_help='Create a Flask RESTful API project.')
+@click.option('--name', '-n', prompt='What is your project\'s name?',
               default='myeasyflask', help='The project\'s name.')
-@click.option('--directory',
-              '-d',
+@click.option('--directory', '-d',
               prompt='Where you want to create?(empty to current dir)',
               default=os.getcwd(),
               help='Optional destination directory')
@@ -107,7 +111,7 @@ def _create_modules(app_path, module_names, *tplnames):
               help='Porject\'s module names')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
-def main(name, directory, modules, swagger):
+def start(name, directory, modules, swagger):
     _check_project_name(name)
     module_names = modules.split(' ')
     swagger_needed = True if swagger == 'y' else False
@@ -151,8 +155,12 @@ def main(name, directory, modules, swagger):
         _create_from_template(project_root, PROJECT_ENV, tpl_name, **content)
 
     _create_modules(app_root, module_names,
-                    '__init__.py-tpl', 'routes.py-tpl', 'models.py-tpl')
+                    'app/app_template/__init__.py-tpl',
+                    'app/app_template/routes.py-tpl',
+                    'app/app_template/models.py-tpl')
 
+
+command = click.CommandCollection(sources=[main])
 
 if __name__ == '__main__':
-    main()
+    command()
