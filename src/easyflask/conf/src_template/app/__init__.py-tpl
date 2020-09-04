@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from importlib import import_module
 
 from flask import Flask{% if swagger_needed %}

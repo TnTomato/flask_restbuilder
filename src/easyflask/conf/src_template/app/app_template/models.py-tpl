@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # define models here
 from extension.mysql import db, MySQLBaseModel
 
