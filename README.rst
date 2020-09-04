@@ -34,6 +34,7 @@ Follow the guidance and finish the questions below, you will get a directory
 
 .. code-block:: text
 
+    myproject
     ├─ .gitignore
     ├─ CHANGES.rst
     ├─ README.rst
