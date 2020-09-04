@@ -79,7 +79,7 @@ Create your API views like:
             return result
 
 ``self.parser`` is an instance of ``flask_restful.reqparse.RequestParser``,
-use ``add_arguments`` the same way. Use ``self.parse_arguments`` to make
+use ``add_argument`` the same way. Use ``self.parse_arguments`` to make
 ``self.args = self.parser.parse_args()``
 
 About Database
