@@ -112,6 +112,7 @@ def main():
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def start(name, directory, modules, swagger):
+    # TODO: try read file to render tempalte
     _check_project_name(name)
     module_names = modules.split(' ')
     swagger_needed = True if swagger == 'y' else False
