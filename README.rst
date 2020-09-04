@@ -19,6 +19,8 @@ Example
 About Project
 -------------
 
+Use command ``easyflask start`` to create a project:
+
 .. code-block:: text
 
     path/to/project: easyflask start
