@@ -9,7 +9,7 @@
     :copyright: 2020 TnTomato
     :license: BSD-3-Clause
 """
-from .exceptions import *
+from .exceptions import BaseError
 from .views import RESTful
 
 __version__ = '0.1.0.dev'

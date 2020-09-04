@@ -59,8 +59,8 @@ Follow the guidance and finish the questions below, you will get a directory:
             │
             └─ util
 
-About APIs
-----------
+About API
+---------
 
 Create your API views like:
 
@@ -82,11 +82,26 @@ Create your API views like:
 use ``add_argument`` the same way. Use ``self.parse_arguments`` to make
 ``self.args = self.parser.parse_args()``
 
+About Error
+-----------
+
+There some basic errors in ``easyflask.exceptions``. Customize your exceptions
+from ``easyflask.BaseError``:
+
+.. code-block:: python
+
+    from easyflask import BaseError
+
+    class MyError(BaseError):
+        code = 12345
+        message = 'my error message'
+
 About Database
 --------------
 
 Flask_SQLAlchemy is equipped. You can see in ``extension/mysql.py`` and freely
 edit any basic options.
+
 
 Thanks to
 =========
