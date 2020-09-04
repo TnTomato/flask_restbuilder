@@ -13,6 +13,7 @@ def create_app(config_name='debugging'):
     Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}
 
     blueprints = []
+
     def register_bps(bps):
         for bp in bps:
             app.register_blueprint(getattr(import_module('app.test'), bp))
