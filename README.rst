@@ -29,7 +29,8 @@ Use command ``easyflask start`` to create a project:
     Your project's modules(use whitespace to split) [mymodule]: app1 app2
     Need swagger support?(y/n) [y]:
 
-Follow the guidance and finish the questions below, you will get a directory:
+Follow the guidance and finish the questions below, you will get a directory
+(The project directory is based on **src mode**):
 
 .. code-block:: text
 
