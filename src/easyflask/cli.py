@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+    easyflask.cli
+    ~~~~~~~~~~~~~
+
+    Command line application
+
+    :copyright: 2020 TnTomato
+    :license: BSD-3-Clause
+"""
 import base64
 import os
 
@@ -19,7 +29,7 @@ APP_ENV = Environment(loader=FileSystemLoader(APP_TPL_DIR))
 API_ENV = Environment(loader=FileSystemLoader(API_TPL_DIR))
 
 
-def create_folders(*folders):
+def _create_folders(*folders):
     for folder in folders:
         try:
             os.makedirs(folder)
@@ -29,7 +39,7 @@ def create_folders(*folders):
             click.echo(e)
 
 
-def create_from_template(path, tplenv, tplname, filename=None, **kwargs):
+def _create_from_template(path, tplenv, tplname, filename=None, **kwargs):
     tpl = tplenv.get_template(tplname)
     file = tpl.render(kwargs)
     if not filename:
@@ -38,7 +48,7 @@ def create_from_template(path, tplenv, tplname, filename=None, **kwargs):
         f.write(file)
 
 
-def create_modules(app_path, module_names, *tplnames):
+def _create_modules(app_path, module_names, *tplnames):
     # TODO: add module_names to create_app
     api_path = os.path.join(app_path, 'api')
     for module_name in module_names:
@@ -50,13 +60,13 @@ def create_modules(app_path, module_names, *tplnames):
         except OSError as e:
             click.echo(e)
 
-        create_from_template(api_path, API_ENV, '__init__.py-tpl')
-        create_from_template(
+        _create_from_template(api_path, API_ENV, '__init__.py-tpl')
+        _create_from_template(
             api_path, API_ENV, 'app_api.py-tpl', f'{module_name}.py')
 
         for tplname in tplnames:
             content = dict(module_name=module_name)
-            create_from_template(module_dir, APP_ENV, tplname, **content)
+            _create_from_template(module_dir, APP_ENV, tplname, **content)
 
 
 @click.command('startproject', short_help='Create a Flask RESTful API project.')
@@ -73,7 +83,7 @@ def create_modules(app_path, module_names, *tplnames):
               help='Porject\'s module names')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
-def start_project(name, directory, modules, swagger):
+def main(name, directory, modules, swagger):
     module_names = modules.split(' ')
     swagger_needed = True if swagger == 'y' else False
 
@@ -85,10 +95,10 @@ def start_project(name, directory, modules, swagger):
     extension_root = os.path.join(src_project_root, 'extension')
     util_root = os.path.join(src_project_root, 'util')
 
-    create_folders(app_root,
-                   api_root,
-                   extension_root,
-                   util_root)
+    _create_folders(app_root,
+                    api_root,
+                    extension_root,
+                    util_root)
 
     src_tpl2content = {
         'manage.py-tpl': {},
@@ -104,7 +114,7 @@ def start_project(name, directory, modules, swagger):
     }
 
     for tpl_name, content in src_tpl2content.items():
-        create_from_template(src_project_root, SRC_ENV, tpl_name, **content)
+        _create_from_template(src_project_root, SRC_ENV, tpl_name, **content)
 
     project_tpl2content = {
         '.gitignore-tpl': {},
@@ -113,11 +123,11 @@ def start_project(name, directory, modules, swagger):
     }
 
     for tpl_name, content in project_tpl2content.items():
-        create_from_template(project_root, PROJECT_ENV, tpl_name, **content)
+        _create_from_template(project_root, PROJECT_ENV, tpl_name, **content)
 
-    create_modules(app_root, module_names,
-                   '__init__.py-tpl', 'routes.py-tpl', 'models.py-tpl')
+    _create_modules(app_root, module_names,
+                    '__init__.py-tpl', 'routes.py-tpl', 'models.py-tpl')
 
 
 if __name__ == '__main__':
-    start_project()
+    main()
