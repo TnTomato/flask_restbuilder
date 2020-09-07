@@ -14,11 +14,10 @@ import sys
 from importlib import import_module
 
 import click
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 # jinjia2 environments
-PROJECT_ENV = Environment(loader=PackageLoader('tpls', 'project_template'))
-SRC_ENV = Environment(loader=PackageLoader('tpls', 'src_template'))
+JINJA_ENV = Environment(loader=FileSystemLoader('templates'))
 
 
 def _check_project_name(name):
