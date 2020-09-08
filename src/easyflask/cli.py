@@ -163,4 +163,4 @@ def start(name, directory, modules, swagger):
 command = click.CommandCollection(sources=[main])
 
 if __name__ == '__main__':
-    command()
+    print(JINJA_ENV.get_template('project_template/.gitignore-tpl'))
