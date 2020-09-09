@@ -23,33 +23,7 @@ setup(
     long_description=readme,
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    data_files=[
-        (
-            'Lib/site-packages/easyflask/tpls/project_template',
-            ['src/easyflask/tpls/project_template/.gitignore-tpl',
-             'src/easyflask/tpls/project_template/CHANGES.rst-tpl',
-             'src/easyflask/tpls/project_template/README.rst-tpl']
-        ),
-        (
-            'Lib/site-packages/easyflask/tpls/src_template',
-            ['src/easyflask/tpls/src_template/config.py-tpl',
-             'src/easyflask/tpls/src_template/manage.py-tpl']),
-        (
-            'Lib/site-packages/easyflask/tpls/src_template/app',
-            ['src/easyflask/tpls/src_template/app/__init__.py-tpl']
-        ),
-        (
-            'Lib/site-packages/easyflask/tpls/src_template/app/api_template',
-            ['src/easyflask/tpls/src_template/app/api_template/__init__.py-tpl',
-             'src/easyflask/tpls/src_template/app/api_template/app_api.py-tpl']
-        ),
-        (
-            'Lib/site-packages/easyflask/tpls/src_template/app/app_template',
-            ['src/easyflask/tpls/src_template/app/app_template/__init__.py-tpl',
-             'src/easyflask/tpls/src_template/app/app_template/models.py-tpl',
-             'src/easyflask/tpls/src_template/app/app_template/routes.py-tpl']
-        )
-    ],
+    data_files=[],
     include_package_data=True,
     python_requires='>=3.8',
     install_requires=[

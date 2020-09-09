@@ -35,26 +35,28 @@ def _check_project_name(name):
         sys.exit(0)
 
 
-def _create_folders(*folders):
-    for folder in folders:
-        try:
-            os.makedirs(folder)
-        except FileExistsError:
-            click.echo(f'`{folder}` already exists')
-        except OSError as e:
-            click.echo(e)
+def _create_from_templates(tpl2meta):
+    for tpl_path, meta in tpl2meta.items():
+        abs_path = meta.get('dest')
+        content = meta.get('content')
+        filename = meta.get('filename')
+
+        if not os.path.exists(abs_path):
+            os.makedirs(abs_path)
+
+        if not filename:
+            filename = os.path.basename(tpl_path).split('-')[0]
+
+        path = os.path.join(abs_path, filename)
+        tpl = JINJA_ENV.get_template(tpl_path)
+        file_content = tpl.render(content)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(file_content)
 
 
-def _create_from_template(path, tplenv, tplname, filename=None, **kwargs):
-    tpl = tplenv.get_template(tplname)
-    file = tpl.render(kwargs)
-    if not filename:
-        filename = tplname.split('-')[0]
-    with open(os.path.join(path, filename), 'w', encoding='utf-8') as f:
-        f.write(file)
-
-
-def _create_modules(app_path, module_names, *tplnames):
+def _create_modules(app_path, module_names):
+    module_tpl_base_dir = 'project_tpl/src_tpl/project_name/app_tpl/app_name/'
+    api_tpl_base_dir = 'project_tpl/src_tpl/project_name/app_tpl/api_tpl/'
     api_path = os.path.join(app_path, 'api')
     init_path = os.path.join(app_path, '__init__.py')
     for module_name in module_names:
@@ -66,23 +68,31 @@ def _create_modules(app_path, module_names, *tplnames):
         except OSError as e:
             click.echo(e)
 
-        _create_from_template(api_path,
-                              SRC_ENV,
-                              'app/api_template/__init__.py-tpl',
-                              '__init__.py')
-        _create_from_template(api_path,
-                              SRC_ENV,
-                              'app/api_template/app_api.py-tpl',
-                              f'{module_name}.py')
+        module2meta = {
+            module_tpl_base_dir + '__init__.py-tpl': {
+                'dest': module_dir,
+                'content': {
+                    'module_name': module_name
+                }
+            },
+            module_tpl_base_dir + 'models.py-tpl': {
+                'dest': module_dir,
+                'content': {}
+            },
+            module_tpl_base_dir + 'routes.py-tpl': {
+                'dest': module_dir,
+                'content': {
+                    'module_name': module_name
+                }
+            },
 
-        for tplname in tplnames:
-            content = dict(module_name=module_name)
-            file_name = tplname.split('/')[-1].split('-')[0]
-            _create_from_template(module_dir,
-                                  SRC_ENV,
-                                  tplname,
-                                  file_name,
-                                  **content)
+            api_tpl_base_dir + 'api.py-tpl': {
+                'dest': api_path,
+                'content': {},
+                'filename': module_name + '.py'
+            }
+        }
+        _create_from_templates(module2meta)
 
     with open(init_path, 'r', encoding='utf-8') as f:
         file = f.read()
@@ -111,7 +121,6 @@ def main():
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def start(name, directory, modules, swagger):
-    # TODO: try read file to render tempalte
     _check_project_name(name)
     module_names = modules.split(' ')
     swagger_needed = True if swagger == 'y' else False
@@ -122,45 +131,74 @@ def start(name, directory, modules, swagger):
     app_root = os.path.join(src_project_root, 'app')
     api_root = os.path.join(app_root, 'api')
     extension_root = os.path.join(src_project_root, 'extension')
-    util_root = os.path.join(src_project_root, 'util')
+    # util_root = os.path.join(src_project_root, 'util')
 
-    _create_folders(app_root,
-                    api_root,
-                    extension_root,
-                    util_root)
+    tpl2meta = {
+        # files in project's base-diractory
+        'project_tpl/README.rst-tpl': {
+            'dest': project_root,
+            'content': {
+                'project_name': name
+            }
+        },
+        'project_tpl/.gitignore-tpl': {
+            'dest': project_root,
+            'content': {}
+        },
+        'project_tpl/CHANGES.rst-tpl': {
+            'dest': project_root,
+            'content': {}
+        },
 
-    src_tpl2content = {
-        'manage.py-tpl': {},
-        'config.py-tpl': {
-            'project_name': name,
-            'secret_key': base64.b64encode(os.urandom(24)).decode('utf-8'),
-            'swagger_needed': swagger_needed
+        # files in src/<name>
+        'project_tpl/src_tpl/project_name/__init__.py-tpl': {
+            'dest': src_project_root,
+            'content': {}
         },
-        'app/__init__.py-tpl': {
-            'swagger_needed': swagger_needed
+        'project_tpl/src_tpl/project_name/config.py-tpl': {
+            'dest': src_project_root,
+            'content': {
+                'project_name': name,
+                'secret_key': base64.b64encode(os.urandom(24)).decode('utf-8'),
+                'swagger_needed': swagger_needed
+            }
         },
-        'extension/mysql.py-tpl': {},
+        'project_tpl/src_tpl/project_name/manage.py-tpl': {
+            'dest': src_project_root,
+            'content': {}
+        },
+
+        # files in src/<name>/app
+        'project_tpl/src_tpl/project_name/app_tpl/__init__.py-tpl': {
+            'dest': app_root,
+            'content': {
+                'swagger_needed': swagger_needed
+            }
+        },
+
+        # files in src/<name>/app/api
+        'project_tpl/src_tpl/project_name/app_tpl/api_tpl/__init__.py-tpl': {
+            'dest': api_root,
+            'content': {}
+        },
+
+        # files in src/<name>/extension
+        'project_tpl/src_tpl/project_name/extension_tpl/__init__.py-tpl': {
+            'dest': extension_root,
+            'content': {}
+        },
+        'project_tpl/src_tpl/project_name/extension_tpl/mysql.py-tpl': {
+            'dest': extension_root,
+            'content': {}
+        }
     }
 
-    for tpl_name, content in src_tpl2content.items():
-        _create_from_template(src_project_root, SRC_ENV, tpl_name, **content)
+    _create_from_templates(tpl2meta)
 
-    project_tpl2content = {
-        '.gitignore-tpl': {},
-        'README.rst-tpl': {'project_name': name},
-        'CHANGES.rst-tpl': {}
-    }
-
-    for tpl_name, content in project_tpl2content.items():
-        _create_from_template(project_root, PROJECT_ENV, tpl_name, **content)
-
-    _create_modules(app_root, module_names,
-                    'app/app_template/__init__.py-tpl',
-                    'app/app_template/routes.py-tpl',
-                    'app/app_template/models.py-tpl')
+    _create_modules(app_root, module_names)
 
 
 command = click.CommandCollection(sources=[main])
 
 if __name__ == '__main__':
-    print(JINJA_ENV.get_template('project_template/.gitignore-tpl'))
+    command()
