@@ -69,6 +69,7 @@ def _create_modules(app_path, module_names):
             click.echo(e)
 
         module2meta = {
+            # files in src/<name>/app/<module_name>
             module_tpl_base_dir + '__init__.py-tpl': {
                 'dest': module_dir,
                 'content': {
@@ -86,6 +87,7 @@ def _create_modules(app_path, module_names):
                 }
             },
 
+            # files in src/<name>/app/api
             api_tpl_base_dir + 'api.py-tpl': {
                 'dest': api_path,
                 'content': {},
@@ -94,6 +96,7 @@ def _create_modules(app_path, module_names):
         }
         _create_from_templates(module2meta)
 
+    # update flask factory blueprints
     with open(init_path, 'r', encoding='utf-8') as f:
         file = f.read()
         replaced = file.replace('blueprints = []',
