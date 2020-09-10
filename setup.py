@@ -34,7 +34,7 @@ setup(
     author='TnTomato',
     author_email='474093103@qq.com',
     maintainer='TnTomato',
-    description='A microframework makes building RESTful API projects easier.',
+    description='A Flask-based framework for easy REST API projects building.',
     long_description=readme,
     packages=find_packages('src'),
     package_dir={'': 'src'},
@@ -62,6 +62,16 @@ setup(
         'six>=1.15.0',
         'SQLAlchemy>=1.3.19',
         'Werkzeug>=1.0.1'
+    ],
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Framework :: Flask',
+        'Natural Language :: English',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 3.8'
     ],
     entry_points={'console_scripts': ['easyflask = easyflask.cli:main']}
 )
