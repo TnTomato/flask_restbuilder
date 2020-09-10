@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 with open('README.rst', 'rt', encoding='utf-8') as f:
     readme = f.read()
 
-with open('src/easyflask/__init__.py', 'rt', encoding="utf-8") as f:
+with open('src/flask_restbuilder/__init__.py', 'rt', encoding="utf-8") as f:
     version = re.search(r"__version__ = '(.*?)'", f.read()).group(1)
 
 
@@ -15,7 +15,7 @@ def data_files(directory):
     for path, dirs, files in os.walk(directory):
         if files:
             datas = [os.path.join(path, file) for file in files]
-            dest = path.replace('src/easyflask/', '')
+            dest = path.replace('src/flask_restbuilder/', '')
             paths.append(
                 (dest, datas)
             )
@@ -24,11 +24,11 @@ def data_files(directory):
 
 
 setup(
-    name='easyflask',
+    name='Flask-RESTBuilder',
     version=version,
-    url='https://github.com/TnTomato/easyflask',
+    url='https://github.com/TnTomato/flask_restbuilder',
     project_urls={
-      'Code': 'https://github.com/TnTomato/easyflask'
+      'Code': 'https://github.com/TnTomato/flask_restbuilder'
     },
     license='BSD-3-Clause',
     author='TnTomato',
@@ -39,7 +39,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
-    data_files=data_files('src/easyflask/templates'),
+    data_files=data_files('src/flask_restbuilder/templates'),
     python_requires='>=3.8',
     install_requires=[
         'aniso8601>=8.0.0',
@@ -73,5 +73,5 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.8'
     ],
-    entry_points={'console_scripts': ['easyflask = easyflask.cli:main']}
+    entry_points={'console_scripts': ['flask_restbuilder = flask_restbuilder.cli:main']}
 )

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    easyflask.views
+    flask_restbuilder.views
     ~~~~~~~~~~~~~~~
 
     View level helpers.
@@ -47,7 +47,7 @@ class RESTful(Resource):
 
     def __init__(self):
         # An instance of :class:`flask_restful.reqparse.RequestParser`,
-        # makes it easy to use in :class:`~easyflask.RESTful`
+        # makes it easy to use in :class:`~flask_restbuilder.RESTful`
         self.parser = reqparse.RequestParser()
 
         # Read `args` from `parser` using `self.parse_arguments()`

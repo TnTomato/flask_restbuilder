@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    easyflask
+    flask_restbuilder
     ~~~~~~~~~
 
     A microframework built from Flask + Flask-Restful to make it easier to

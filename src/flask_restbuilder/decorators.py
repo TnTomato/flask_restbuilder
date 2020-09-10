@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    easyflask.decorators
+    flask_restbuilder.decorators
     ~~~~~~~~~~~~~~~~~~~~
 
     :copyright: 2020 TnTomato

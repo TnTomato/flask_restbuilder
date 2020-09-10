@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    easyflask.cli
+    flask_restbuilder.cli
     ~~~~~~~~~~~~~
 
     Command line application
@@ -114,7 +114,7 @@ def main():
 
 @main.command('start', short_help='Create a Flask RESTful API project.')
 @click.option('--name', '-n', prompt='What is your project\'s name?',
-              default='myeasyflask', help='The project\'s name.')
+              default='myproject', help='The project\'s name.')
 @click.option('--directory', '-d',
               prompt='Where you want to create?(empty to current dir)',
               default=os.getcwd(),

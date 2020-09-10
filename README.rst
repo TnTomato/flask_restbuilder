@@ -1,8 +1,8 @@
-EasyFlask
-=========
+Flask-RESTBuilder
+=================
 
-EasyFlask is a mircroframework based on Flask and some Flask's extensions.
-It's aimed to make it easier to build a RESTful API project in Flask.
+Flask-RESTBuilder is a mircroframework based on Flask and some Flask's
+extensions. It's aimed to make it easier to build a RESTful API project in Flask.
 
 Installing
 ==========
@@ -11,7 +11,7 @@ Install and update by pip:
 
 .. code-block:: text
 
-    pip install easyflask
+    pip install flask_restbuilder
 
 Example
 =======
@@ -19,12 +19,12 @@ Example
 About Project
 -------------
 
-Use command ``easyflask start`` to create a project:
+Use command ``flask_restbuilder start`` to create a project:
 
 .. code-block:: text
 
-    path/to/project: easyflask start
-    What is your project's name? [myeasyflask]: myproject
+    path/to/project: flask_restbuilder start
+    What is your project's name? [myproject]: myproject
     Where you want to create?(empty to current dir) [path/to/project]:
     Your project's modules(use whitespace to split) [mymodule]: app1 app2
     Need swagger support?(y/n) [y]:
@@ -66,7 +66,7 @@ Create your API views like:
 
 .. code-block:: python
 
-    from easyflask import RESTful
+    from flask_restbuilder import RESTful
 
     class MyAPI(RESTful):
 
@@ -85,12 +85,12 @@ use ``add_argument`` the same way. Use ``self.parse_arguments`` to make
 About Error
 -----------
 
-There some basic errors in ``easyflask.exceptions``. Customize your exceptions
-from ``easyflask.BaseError``:
+There some basic errors in ``flask_restbuilder.exceptions``. Customize your exceptions
+from ``flask_restbuilder.BaseError``:
 
 .. code-block:: python
 
-    from easyflask import BaseError
+    from flask_restbuilder import BaseError
 
     class MyError(BaseError):
         code = 12345

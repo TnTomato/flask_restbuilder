@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    easyflask.exceptions
+    flask_restbuilder.exceptions
     ~~~~~~~~~~~~~~~~~~~~
 
     HTTP level exceptions.
@@ -13,7 +13,7 @@
 class BaseError(Exception):
     """Use as a basic class of Exception in your project:
 
-        from easyflask.exceptions import BaseError
+        from flask_restbuilder.exceptions import BaseError
 
         class MyError(BaseError):
             code = 999
