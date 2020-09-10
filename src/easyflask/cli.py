@@ -17,7 +17,9 @@ import click
 from jinja2 import Environment, FileSystemLoader
 
 # jinjia2 environments
-JINJA_ENV = Environment(loader=FileSystemLoader('templates'))
+PATH = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_PATH = os.path.join(PATH, 'templates')
+JINJA_ENV = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
 
 
 def _check_project_name(name):

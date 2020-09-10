@@ -1,3 +1,4 @@
+import os
 import re
 
 from setuptools import find_packages, setup
@@ -7,6 +8,21 @@ with open('README.rst', 'rt', encoding='utf-8') as f:
 
 with open('src/easyflask/__init__.py', 'rt', encoding="utf-8") as f:
     version = re.search(r"__version__ = '(.*?)'", f.read()).group(1)
+
+
+def data_files(directory):
+    paths = []
+    for path, dirs, files in os.walk(directory):
+        print(path, dirs, files)
+        if files:
+            datas = [os.path.join(path, file) for file in files]
+            dest = path.replace('src/easyflask/', '')
+            paths.append(
+                (dest, datas)
+            )
+
+    return paths
+
 
 setup(
     name='easyflask',
@@ -23,8 +39,8 @@ setup(
     long_description=readme,
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    data_files=[],
     include_package_data=True,
+    data_files=data_files('src/easyflask/templates'),
     python_requires='>=3.8',
     install_requires=[
         'aniso8601>=8.0.0',
@@ -40,6 +56,7 @@ setup(
         'jsonschema>=3.2.0',
         'MarkupSafe>=1.1.1',
         'mistune>=0.8.4',
+        'pymongo>=3.11.0',
         'pyrsistent>=0.16.0',
         'pytz>=2020.1',
         'PyYAML>=5.3.1',
