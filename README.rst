@@ -56,10 +56,8 @@ Follow the guidance and finish the questions below, you will get a directory
             │       ├─ models.py
             │       ├─ routes.py
             │       └─ __init__.py
-            ├─ extension
-            │   └─ mysql.py
-            │
-            └─ util
+            └─ extension
+                └─ mysql.py
 
 About API
 ---------
