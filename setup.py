@@ -13,7 +13,6 @@ with open('src/easyflask/__init__.py', 'rt', encoding="utf-8") as f:
 def data_files(directory):
     paths = []
     for path, dirs, files in os.walk(directory):
-        print(path, dirs, files)
         if files:
             datas = [os.path.join(path, file) for file in files]
             dest = path.replace('src/easyflask/', '')
