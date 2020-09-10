@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     flask_restbuilder.views
-    ~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
     View level helpers.
 

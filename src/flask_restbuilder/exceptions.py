@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     flask_restbuilder.exceptions
-    ~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     HTTP level exceptions.
 

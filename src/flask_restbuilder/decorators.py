@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     flask_restbuilder.decorators
-    ~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     :copyright: 2020 TnTomato
     :license: BSD-3-Clause
