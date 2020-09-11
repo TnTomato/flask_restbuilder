@@ -73,5 +73,7 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.8'
     ],
-    entry_points={'console_scripts': ['flask_restbuilder = flask_restbuilder.cli:main']}
+    entry_points={
+        'console_scripts': ['flask_restbuilder = flask_restbuilder.cli:main']
+    }
 )
