@@ -3,6 +3,9 @@ import re
 
 from setuptools import find_packages, setup
 
+DESCRIPTION = 'A microframework for building RESTful API projects in Flask ' \
+              'with Flask-RESTful.'
+
 with open('README.rst', 'rt', encoding='utf-8') as f:
     readme = f.read()
 
@@ -34,7 +37,7 @@ setup(
     author='TnTomato',
     author_email='474093103@qq.com',
     maintainer='TnTomato',
-    description='A Flask-based framework for easy REST API projects building.',
+    description=DESCRIPTION,
     long_description=readme,
     packages=find_packages('src'),
     package_dir={'': 'src'},
