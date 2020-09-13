@@ -17,7 +17,8 @@ def create_app(config_name='debugging'):
 
     def register_bps(bps):
         for bp in bps:
-            app.register_blueprint(getattr(import_module('app.test'), bp))
+            app.register_blueprint(getattr(import_module(f'app.{bp}'),
+                                   f'{bp}_bp'))
     register_bps(blueprints)
 
     return app

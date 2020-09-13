@@ -1,3 +1,10 @@
+Version 0.1.1
+-------------
+
+Developing
+
+- Fix bugs when creating modules
+
 Version 0.1.0
 =============
 
