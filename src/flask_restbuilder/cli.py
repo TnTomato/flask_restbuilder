@@ -56,7 +56,7 @@ def _create_from_templates(tpl2meta):
             f.write(file_content)
 
 
-def _create_modules(app_path, module_names):
+def _create_modules(app_path, module_names, db_support):
     module_tpl_base_dir = 'project_tpl/src_tpl/project_name/app_tpl/app_name/'
     api_tpl_base_dir = 'project_tpl/src_tpl/project_name/app_tpl/api_tpl/'
     api_path = os.path.join(app_path, 'api')
@@ -78,10 +78,6 @@ def _create_modules(app_path, module_names):
                     'module_name': module_name
                 }
             },
-            module_tpl_base_dir + 'models.py-tpl': {
-                'dest': module_dir,
-                'content': {}
-            },
             module_tpl_base_dir + 'routes.py-tpl': {
                 'dest': module_dir,
                 'content': {
@@ -96,6 +92,17 @@ def _create_modules(app_path, module_names):
                 'filename': module_name + '.py'
             }
         }
+
+        if db_support:
+            module2meta.update(
+                {
+                    module_tpl_base_dir + 'models.py-tpl': {
+                        'dest': module_dir,
+                        'content': {}
+                    }
+                }
+            )
+
         _create_from_templates(module2meta)
 
     # update flask factory blueprints
@@ -123,12 +130,14 @@ def main():
               prompt='Your project\'s modules(use whitespace to split)',
               default='mymodule',
               help='Porject\'s module names')
+@click.option('--sa', prompt='Need sqlalchemy support?(y/n)', default='n')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
-def start(name, directory, modules, swagger):
+def start(name, directory, modules, sa, swagger):
     _check_project_name(name)
     module_names = modules.split(' ')
-    swagger_needed = True if swagger == 'y' else False
+    swagger_support = True if swagger == 'y' else False
+    sa_support = True if sa == 'y' else False
 
     project_root = os.path.join(directory, name)
     src_project_root = os.path.join(project_root, f'src/{name}')
@@ -165,7 +174,8 @@ def start(name, directory, modules, swagger):
             'content': {
                 'project_name': name,
                 'secret_key': base64.b64encode(os.urandom(24)).decode('utf-8'),
-                'swagger_needed': swagger_needed
+                'sa_support': sa_support,
+                'swagger_support': swagger_support
             }
         },
         'project_tpl/src_tpl/project_name/manage.py-tpl': {
@@ -177,7 +187,8 @@ def start(name, directory, modules, swagger):
         'project_tpl/src_tpl/project_name/app_tpl/__init__.py-tpl': {
             'dest': app_root,
             'content': {
-                'swagger_needed': swagger_needed
+                'sa_support': sa_support,
+                'swagger_support': swagger_support
             }
         },
 
@@ -191,16 +202,49 @@ def start(name, directory, modules, swagger):
         'project_tpl/src_tpl/project_name/extension_tpl/__init__.py-tpl': {
             'dest': extension_root,
             'content': {}
-        },
-        'project_tpl/src_tpl/project_name/extension_tpl/mysql.py-tpl': {
-            'dest': extension_root,
-            'content': {}
         }
     }
 
+    if sa_support:
+        tpl2meta.update(
+            {
+                'project_tpl/src_tpl/project_name/extension_tpl/mysql.py-tpl': {
+                    'dest': extension_root,
+                    'content': {}
+                }
+            }
+        )
+
     _create_from_templates(tpl2meta)
 
-    _create_modules(app_root, module_names)
+    # extend when other db-like extensions are added
+    if sa_support:
+        db_support = True
+    else:
+        db_support = False
+
+    _create_modules(app_root, module_names, db_support)
+
+
+@main.command('startapp', short_help='Create a module in the project.')
+@click.option('--name', '-n', prompt='What is your module\'s name?',
+              default='mymodule', help='The module\'s name.')
+def startapp(name):
+    this_path = os.getcwd()
+    project_name = os.path.basename(this_path)
+    src_dir = os.path.join(this_path, 'src')
+    if not os.path.exists(src_dir):
+        raise FileNotFoundError('wrong directory')
+
+    # TODO: when other db-like extension added
+    extension_dir = os.path.join(src_dir, f'{project_name}/extension')
+    if not os.path.exists(os.path.join(extension_dir, 'mysql.py')):
+        db_support = False
+    else:
+        db_support = True
+
+    app_dir = os.path.join(src_dir, f'{project_name}/app')
+    _create_modules(app_dir, [name], db_support)
 
 
 command = click.CommandCollection(sources=[main])

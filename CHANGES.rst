@@ -1,9 +1,11 @@
 Version 0.1.1
 =============
 
-Developing
+Unreleased
 
 - Fix bugs when creating modules
+- separate sqlalchemy support
+- create module by command
 
 Version 0.1.0
 =============

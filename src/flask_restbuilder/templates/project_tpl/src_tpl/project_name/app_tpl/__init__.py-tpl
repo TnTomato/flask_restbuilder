@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from importlib import import_module
 
-from flask import Flask{% if swagger_needed %}
+from flask import Flask{% if swagger_support %}
 from flasgger import Swagger{% endif %}
 
 from config import configs
@@ -10,8 +10,11 @@ from config import configs
 def create_app(config_name='debugging'):
     app = Flask(__name__)
     app.config.from_object(configs[config_name])
-{% if swagger_needed %}
-    Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}
+{% if swagger_support %}
+    Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}{% if sa_support %}
+
+    from extension.mysql import db as mysql
+    mysql.init_app(app){% endif %}
 
     blueprints = []
 

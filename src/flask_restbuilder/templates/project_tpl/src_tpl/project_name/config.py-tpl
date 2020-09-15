@@ -20,7 +20,7 @@ class BaseConfig(object):
     # Make sure to use SECRET_KEY everywhere in your project
     SECRET_KEY = '{{ secret_key }}'
 
-    LOG_LEVEL = logging.DEBUG{% if swagger_needed %}
+    LOG_LEVEL = logging.DEBUG{% if swagger_support %}
 
     SWAGGER = {
         'title': '{{ project_name }} API',
@@ -41,12 +41,12 @@ class BaseConfig(object):
 
 class DebugConfig(BaseConfig):
     """This is for debugging environment"""
-    DEBUG = True
+    DEBUG = True{% if sa_support %}
 
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_ECHO = True{% if redis_needed %}
+    SQLALCHEMY_ECHO = True{% endif %}{% if redis_needed %}
 
     # Redis settings
     REDIS_CONFIG = {
