@@ -234,7 +234,7 @@ def startapp(name):
     project_name = os.path.basename(this_path)
     src_dir = os.path.join(this_path, 'src')
     if not os.path.exists(src_dir):
-        raise FileNotFoundError('wrong directory')
+        raise click.BadParameter('wrong directory')
 
     # TODO: when other db-like extension added
     extension_dir = os.path.join(src_dir, f'{project_name}/extension')
