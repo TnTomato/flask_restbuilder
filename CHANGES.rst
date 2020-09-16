@@ -6,6 +6,7 @@ Unreleased
 - Fix bugs when creating modules
 - separate sqlalchemy support
 - create module by command
+- exception handle
 
 Version 0.1.0
 =============
