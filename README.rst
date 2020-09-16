@@ -87,8 +87,8 @@ use ``add_argument`` the same way. Use ``self.parse_arguments`` to make
 About Error
 -----------
 
-There some basic errors in ``flask_restbuilder.exceptions``. Customize your exceptions
-from ``flask_restbuilder.BaseError``:
+There some basic errors in ``flask_restbuilder.exceptions``. Customize your
+exceptions from ``flask_restbuilder.BaseError``:
 
 .. code-block:: python
 
