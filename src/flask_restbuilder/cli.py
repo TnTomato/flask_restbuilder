@@ -22,19 +22,26 @@ TEMPLATE_PATH = os.path.join(PATH, 'templates')
 JINJA_ENV = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
 
 
+class ExceptionHandler(click.Group):
+
+    def __call__(self, *args, **kwargs):
+        try:
+            return self.main(*args, **kwargs)
+        except Exception as e:
+            click.echo(e)
+
+
 def _check_project_name(name):
     if not name.isidentifier():
-        click.echo(f'{name} is not a valid name.')
-        sys.exit(0)
+        raise click.BadParameter(f'`{name}` is not a valid name.')
 
     try:
         import_module(name)
     except ImportError:
         pass
     else:
-        click.echo(f'{name} is conflict with the name of an existing Python '
-                   f'module.')
-        sys.exit(0)
+        raise click.BadParameter(f'`{name}` is conflict with the name of an '
+                                 f'existing Python module.')
 
 
 def _create_from_templates(tpl2meta):
@@ -66,9 +73,9 @@ def _create_modules(app_path, module_names, db_support):
         try:
             os.makedirs(module_dir)
         except FileExistsError:
-            click.echo(f'`{module_dir}` already exists')
+            raise FileExistsError(f'`{module_dir}` already exists')
         except OSError as e:
-            click.echo(e)
+            raise click.ClickException(str(e))
 
         module2meta = {
             # files in src/<name>/app/<module_name>
@@ -114,7 +121,7 @@ def _create_modules(app_path, module_names, db_support):
         f.write(replaced)
 
 
-@click.group()
+@click.group(cls=ExceptionHandler)
 def main():
     pass
 
