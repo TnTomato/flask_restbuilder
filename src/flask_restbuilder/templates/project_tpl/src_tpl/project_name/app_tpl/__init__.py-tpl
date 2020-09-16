@@ -13,8 +13,8 @@ def create_app(config_name='debugging'):
 {% if swagger_support %}
     Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}{% if sa_support %}
 
-    from extension.mysql import db as mysql
-    mysql.init_app(app){% endif %}
+    from extension.sa import db as sa
+    sa.init_app(app){% endif %}
 
     blueprints = []
 

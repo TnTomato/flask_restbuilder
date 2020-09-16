@@ -38,7 +38,7 @@ class CustomQuery(BaseQuery):
 db = SQLAlchemy(query_class=CustomQuery)
 
 
-class MySQLBaseModel(db.Model):
+class SABaseModel(db.Model):
     """Base Model of SQLAlchemy. Custom any field if you want."""
     __abstract__ = True
 

@@ -214,7 +214,7 @@ def start(name, directory, modules, sa, swagger):
     if sa_support:
         tpl2meta.update(
             {
-                'project_tpl/src_tpl/project_name/extension_tpl/mysql.py-tpl': {
+                'project_tpl/src_tpl/project_name/extension_tpl/sa.py-tpl': {
                     'dest': extension_root,
                     'content': {}
                 }
@@ -244,7 +244,7 @@ def startapp(name):
 
     # TODO: when other db-like extension added
     extension_dir = os.path.join(src_dir, f'{project_name}/extension')
-    if not os.path.exists(os.path.join(extension_dir, 'mysql.py')):
+    if not os.path.exists(os.path.join(extension_dir, 'sa.py')):
         db_support = False
     else:
         db_support = True

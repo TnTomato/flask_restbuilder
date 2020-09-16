@@ -27,7 +27,8 @@ Use command ``flask_restbuilder start`` to create a project:
     What is your project's name? [myproject]: myproject
     Where you want to create?(empty to current dir) [path/to/project]:
     Your project's modules(use whitespace to split) [mymodule]: app1 app2
-    Need swagger support?(y/n) [y]:
+    Need sqlalchemy support?(y/n)[n]: y
+    Need swagger support?(y/n) [y]: y
 
 Follow the guidance and finish the questions below, you will get a directory
 (The project directory is based on **src mode**):
@@ -57,7 +58,8 @@ Follow the guidance and finish the questions below, you will get a directory
             │       ├─ routes.py
             │       └─ __init__.py
             └─ extension
-                └─ mysql.py
+                ├─ __init__.py
+                └─ sa.py
 
 About API
 ---------
@@ -99,8 +101,8 @@ from ``flask_restbuilder.BaseError``:
 About Database
 --------------
 
-Flask_SQLAlchemy is equipped. You can see in ``extension/mysql.py`` and freely
-edit any basic options.
+Flask_SQLAlchemy is equipped if you need. If you turn on the sqlalchemy support,
+you can see in ``extension/sa.py`` and can freely edit any basic options.
 
 
 Thanks to
