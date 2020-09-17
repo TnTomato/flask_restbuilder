@@ -21,15 +21,6 @@ TEMPLATE_PATH = os.path.join(PATH, 'templates')
 JINJA_ENV = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
 
 
-class ExceptionHandler(click.Group):
-
-    def __call__(self, *args, **kwargs):
-        try:
-            return self.main(*args, **kwargs)
-        except Exception as e:
-            click.echo(e)
-
-
 def _check_project_name(name):
     if not name.isidentifier():
         raise click.BadParameter(f'`{name}` is not a valid name.')
@@ -72,8 +63,8 @@ def _create_modules(app_path, module_names, db_support):
         try:
             os.makedirs(module_dir)
         except FileExistsError:
-            raise FileExistsError(f'`{module_dir}` already exists')
-        except OSError as e:
+            raise FileExistsError(f'module dir `{module_dir}` already exists')
+        except Exception as e:
             raise click.ClickException(str(e))
 
         module2meta = {
@@ -120,7 +111,7 @@ def _create_modules(app_path, module_names, db_support):
         f.write(replaced)
 
 
-@click.group(cls=ExceptionHandler)
+@click.group()
 def main():
     pass
 
@@ -140,7 +131,11 @@ def main():
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def start(name, directory, modules, sa, swagger):
-    _check_project_name(name)
+    try:
+        _check_project_name(name)
+    except click.BadParameter as e:
+        click.echo(e)
+        return
     module_names = modules.split(' ')
     swagger_support = True if swagger == 'y' else False
     sa_support = True if sa == 'y' else False
@@ -229,7 +224,11 @@ def start(name, directory, modules, sa, swagger):
     else:
         db_support = False
 
-    _create_modules(app_root, module_names, db_support)
+    try:
+        _create_modules(app_root, module_names, db_support)
+    except Exception as e:
+        click.echo(e)
+        return
 
 
 @main.command('startapp', short_help='Create a module in the project.')
@@ -240,7 +239,8 @@ def startapp(name):
     project_name = os.path.basename(this_path)
     src_dir = os.path.join(this_path, 'src')
     if not os.path.exists(src_dir):
-        raise click.BadParameter('wrong directory')
+        click.echo('wrong directory')
+        return
 
     # TODO: when other db-like extension added
     extension_dir = os.path.join(src_dir, f'{project_name}/extension')
@@ -250,7 +250,11 @@ def startapp(name):
         db_support = True
 
     app_dir = os.path.join(src_dir, f'{project_name}/app')
-    _create_modules(app_dir, [name], db_support)
+    try:
+        _create_modules(app_dir, [name], db_support)
+    except Exception as e:
+        click.echo(e)
+        return
 
 
 command = click.CommandCollection(sources=[main])
