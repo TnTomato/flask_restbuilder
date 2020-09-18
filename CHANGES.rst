@@ -7,6 +7,7 @@ Unreleased
 - separate sqlalchemy support
 - create module by command
 - exception handle
+- add pymongo support(todo)
 
 Version 0.1.0
 =============
