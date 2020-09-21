@@ -128,6 +128,11 @@ def main():
               default='mymodule',
               help='Porject\'s module names')
 @click.option('--sa', prompt='Need sqlalchemy support?(y/n)', default='n')
+@click.option('--db',
+              prompt='''Need db support?(Use whitespace to split)
+1.Flask-SQLAlchemy;
+2.Flask-PyMongo;''',
+              )
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def start(name, directory, modules, sa, swagger):
