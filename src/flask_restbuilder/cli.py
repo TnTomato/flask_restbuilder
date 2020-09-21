@@ -127,23 +127,28 @@ def main():
               prompt='Your project\'s modules(use whitespace to split)',
               default='mymodule',
               help='Porject\'s module names')
-@click.option('--sa', prompt='Need sqlalchemy support?(y/n)', default='n')
 @click.option('--db',
-              prompt='''Need db support?(Use whitespace to split)
-1.Flask-SQLAlchemy;
-2.Flask-PyMongo;''',
-              )
+              prompt='''Need db support?(Input numbers, use whitespace to split)
+1. Flask-SQLAlchemy;
+2. Flask-PyMongo;''',
+              default='')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
-def start(name, directory, modules, sa, swagger):
+def start(name, directory, modules, db, swagger):
     try:
         _check_project_name(name)
     except click.BadParameter as e:
         click.echo(e)
         return
+
     module_names = modules.split(' ')
+
     swagger_support = True if swagger == 'y' else False
-    sa_support = True if sa == 'y' else False
+
+    dbs = db.split(' ')
+    sa_support = True if '1' in dbs else False
+    pymongo_support = True if '2' in dbs else False
+    # TODO: add some flask-pymongo stuffs
 
     project_root = os.path.join(directory, name)
     src_project_root = os.path.join(project_root, f'src/{name}')
