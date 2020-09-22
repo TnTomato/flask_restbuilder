@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     flask_restbuilder
-    ~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~
 
     A microframework built from Flask + Flask-Restful to make it easier to
     build Flask RESTful API projects.
