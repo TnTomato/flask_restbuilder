@@ -149,7 +149,6 @@ def start(name, directory, modules, db, swagger):
     dbs = db.split(' ')
     sa_support = True if '1' in dbs else False
     pymongo_support = True if '2' in dbs else False
-    # TODO: add some flask-pymongo stuffs
 
     project_root = os.path.join(directory, name)
     src_project_root = os.path.join(project_root, f'src/{name}')
@@ -262,12 +261,12 @@ def startapp(name):
         click.echo('wrong directory')
         return
 
-    # TODO: when other db-like extension added
     extension_dir = os.path.join(src_dir, f'{project_name}/extension')
-    if not os.path.exists(os.path.join(extension_dir, 'sa.py')):
-        db_support = False
-    else:
+    if os.path.exists(os.path.join(extension_dir, 'sa.py')) \
+            or os.path.exists(os.path.join(extension_dir, 'mongo.py')):
         db_support = True
+    else:
+        db_support = False
 
     app_dir = os.path.join(src_dir, f'{project_name}/app')
     try:
