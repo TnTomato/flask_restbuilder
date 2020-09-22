@@ -60,6 +60,7 @@ setup(
         'mistune>=0.8.4',
         'pymongo>=3.11.0',
         'pyrsistent>=0.16.0',
+        'python-dateutil==2.8.1',
         'pytz>=2020.1',
         'PyYAML>=5.3.1',
         'six>=1.15.0',
@@ -67,7 +68,7 @@ setup(
         'Werkzeug>=1.0.1'
     ],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Framework :: Flask',
