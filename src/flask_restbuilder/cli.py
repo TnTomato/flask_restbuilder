@@ -174,6 +174,10 @@ def start(name, directory, modules, db, swagger):
             'dest': project_root,
             'content': {}
         },
+        'project_tpl/requirements.txt-tpl': {
+            'dest': project_root,
+            'content': {}
+        },
 
         # files in src/<name>
         'project_tpl/src_tpl/project_name/__init__.py-tpl': {

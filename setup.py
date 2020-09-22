@@ -50,6 +50,7 @@ setup(
         'click>=7.1.2',
         'flasgger>=0.9.5',
         'Flask>=1.1.2',
+        'Flask-PyMongo>=2.3.0',
         'Flask-RESTful>=0.3.8',
         'Flask-Script>=2.0.6',
         'Flask-SQLAlchemy>=2.4.4',
