@@ -128,9 +128,10 @@ def main():
               default='mymodule',
               help='Porject\'s module names')
 @click.option('--db',
-              prompt='''Need db support?(Input numbers, use whitespace to split)
+              prompt='''Need db support?
 1. Flask-SQLAlchemy;
-2. Flask-PyMongo;''',
+2. Flask-PyMongo;
+Input numbers, use whitespace to split''',
               default='')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
@@ -186,6 +187,7 @@ def start(name, directory, modules, db, swagger):
                 'project_name': name,
                 'secret_key': base64.b64encode(os.urandom(24)).decode('utf-8'),
                 'sa_support': sa_support,
+                'pymongo_support': pymongo_support,
                 'swagger_support': swagger_support
             }
         },
@@ -199,6 +201,7 @@ def start(name, directory, modules, db, swagger):
             'dest': app_root,
             'content': {
                 'sa_support': sa_support,
+                'pymongo_support': pymongo_support,
                 'swagger_support': swagger_support
             }
         },
@@ -226,13 +229,20 @@ def start(name, directory, modules, db, swagger):
             }
         )
 
+    if pymongo_support:
+        tpl2meta.update(
+            {
+                'project_tpl/src_tpl/project_name/extension_tpl/mongo.py-tpl': {
+                    'dest': extension_root,
+                    'content': {}
+                }
+            }
+        )
+
     _create_from_templates(tpl2meta)
 
-    # extend when other db-like extensions are added
-    if sa_support:
-        db_support = True
-    else:
-        db_support = False
+    # decide whether models.py need to be added to each app package
+    db_support = True if db else False
 
     try:
         _create_modules(app_root, module_names, db_support)

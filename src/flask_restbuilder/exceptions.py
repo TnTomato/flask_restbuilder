@@ -32,9 +32,9 @@ class BaseError(Exception):
             self.code = code
 
 
-class ParameterError(BaseError):
+class ModelInitError(BaseError):
     code = 10000
-    message = 'Invalid paramteter'
+    message = 'error occurred during model initializing'
 
 
 class UnauthorizedError(BaseError):
@@ -50,3 +50,8 @@ class ForbiddenError(BaseError):
 class NotFoundError(BaseError):
     code = 10004
     message = 'Resource not found'
+
+
+class ParameterError(BaseError):
+    code = 10005
+    message = 'Invalid paramteter'

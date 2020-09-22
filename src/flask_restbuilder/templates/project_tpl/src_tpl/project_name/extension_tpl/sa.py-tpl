@@ -35,17 +35,17 @@ class CustomQuery(BaseQuery):
                                                update_args)
 
 
-db = SQLAlchemy(query_class=CustomQuery)
+sa = SQLAlchemy(query_class=CustomQuery)
 
 
-class SABaseModel(db.Model):
+class SABaseModel(sa.Model):
     """Base Model of SQLAlchemy. Custom any field if you want."""
     __abstract__ = True
 
-    id = db.Column(db.String(24), nullable=False, primary_key=True)
-    is_enable = db.Column(db.Boolean(), nullable=False, default=True)
-    created_on = db.Column(db.String(19), nullable=False)
-    updated_on = db.Column(db.String(19), nullable=True, default=None)
+    id = sa.Column(sa.String(24), nullable=False, primary_key=True)
+    is_enable = sa.Column(sa.Boolean(), nullable=False, default=True)
+    created_on = sa.Column(sa.String(19), nullable=False)
+    updated_on = sa.Column(sa.String(19), nullable=True, default=None)
 
     def __init__(self):
         if not self.id:
@@ -55,7 +55,7 @@ class SABaseModel(db.Model):
             self.created_on = now_time.strftime('%Y-%m-%d %H:%M:%S')
 
     def bulk_delete(self, pks, sync_session=False):
-        db.session \
+        sa.session \
             .query(self.__class__) \
             .filter(self.__class__.id.in_(pks)) \
             .update({'is_enable': False}, synchronize_session=sync_session)

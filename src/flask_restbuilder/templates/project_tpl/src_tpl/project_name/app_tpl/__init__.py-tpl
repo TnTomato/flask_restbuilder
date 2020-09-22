@@ -13,9 +13,13 @@ def create_app(config_name='debugging'):
 {% if swagger_support %}
     Swagger(app, template=app.config['FLASGGER_TEMPLATE']){% endif %}{% if sa_support %}
 
-    from extension.sa import db as sa
-    sa.init_app(app){% endif %}
+    # Initialize extensions
+    from extension.sa import sa
+    sa.init_app(app){% endif %}{% if pymongo_support %}
+    from extension.mongo import mongo
+    mongo.init_app(app){% endif %}
 
+    # Initialize blueprints
     blueprints = []
 
     def register_bps(bps):

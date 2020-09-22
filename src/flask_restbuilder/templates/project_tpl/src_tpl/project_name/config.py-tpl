@@ -46,7 +46,10 @@ class DebugConfig(BaseConfig):
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = 'sqlite:///'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_ECHO = True{% endif %}{% if redis_needed %}
+    SQLALCHEMY_ECHO = True{% endif %}{% if pymongo_support %}
+
+    # Flask-PyMongo settings
+    MONGO_URI = 'mongodb://localhost:27017/{{ project_name }}'{% endif %}{% if redis_needed %}
 
     # Redis settings
     REDIS_CONFIG = {

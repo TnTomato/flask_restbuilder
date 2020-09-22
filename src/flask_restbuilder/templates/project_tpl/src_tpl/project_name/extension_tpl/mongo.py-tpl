@@ -1,0 +1,116 @@
+import datetime
+from dateutil import tz
+
+from bson.objectid import ObjectId
+from flask_pymongo import PyMongo
+from pymongo.errors import PyMongoError
+
+from flask_restbuilder.exceptions import ModelInitError
+
+mongo = PyMongo()
+
+
+class MongoDBMetadata(object):
+    id: str
+    create_on: datetime.datetime
+    update_on: datetime.datetime
+    is_enable: bool = True
+
+    def __init__(self):
+        self.id = str(ObjectId())
+        self.create_on = datetime.datetime.now(tz=tz.gettz('Asia/Shanghai'))
+        self.update_on = datetime.datetime.now(tz=tz.gettz('Asia/Shanghai'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'create_on': self.create_on,
+            'update_on': self.update_on,
+            'is_enable': self.is_enable
+        }
+
+
+class MongoBaseModel(object):
+    __collectionname__ = None
+
+    def __init__(self):
+        if self.__collectionname__ is None:
+            raise ModelInitError('please specify __collectionname__')
+
+    @property
+    def coll(self):
+        return getattr(mongo.db, self.__collectionname__)
+
+    def insert_one(self, document, bypass_document_validation=False,
+                   session=None):
+        """
+        :return:
+          - An instance of :class:`MongoDBMetadata`.
+        """
+        metadata = MongoDBMetadata()
+        meta = metadata.to_dict()
+        body = document.copy()
+        meta.update(body)
+        try:
+            self.coll.insert_one(meta, bypass_document_validation, session)
+        except PyMongoError:
+            metadata = None
+
+        return metadata
+
+    def find(self, *args, **kwargs):
+        try:
+            filter = args[0]
+        except IndexError:
+            filter = {}
+        filter['is_enable'] = True
+        args = (filter,) + args[1:]
+        return self.coll.find(*args, **kwargs)
+
+    def find_one(self, filter=None, *args, **kwargs):
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        return self.coll.find_one(filter, *args, **kwargs)
+
+    def delete_one(self, filter, collation=None, session=None):
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        return self.coll.delete_one(filter, collation, session)
+
+    def delete_many(self, filter, collation=None, session=None):
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        return self.coll.delete_many(filter, collation, session)
+
+    def update_one(self, filter, update, upsert=False,
+                   bypass_document_validation=False,
+                   collation=None, array_filters=None, session=None):
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        tmp = update.get('$set') or {}
+        set_body = tmp.copy()
+        set_body['update_on'] = datetime.datetime.now()
+        update['$set'] = set_body
+        return self.coll.update_one(filter, update, upsert,
+                                    bypass_document_validation, collation,
+                                    array_filters, session)
+
+    def update_many(self, filter, update, upsert=False, array_filters=None,
+                    bypass_document_validation=False, collation=None,
+                    session=None):
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        tmp = update.get('$set') or {}
+        set_body = tmp.copy()
+        set_body['update_on'] = datetime.datetime.now()
+        update['$set'] = set_body
+        return self.coll.update_many(filter, update, upsert, array_filters,
+                                     bypass_document_validation, collation,
+                                     session)
+
+    def count_documents(self, filter=None, session=None, **kwargs):
+        if filter is None:
+            filter = {}
+        if 'is_enable' not in filter.keys():
+            filter['is_enable'] = True
+        return self.coll.count_documents(filter, session, **kwargs)
