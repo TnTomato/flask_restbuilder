@@ -1,0 +1,11 @@
+-r tests.in
+click
+flasgger
+Flask
+Flask-PyMongo
+Flask-RESTful
+Flask-Script
+Flask-SQLAlchemy
+pip-tools
+python-dateutil
+tox
