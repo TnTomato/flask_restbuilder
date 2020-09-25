@@ -156,7 +156,6 @@ def start(name, directory, modules, db, swagger):
     app_root = os.path.join(src_project_root, 'app')
     api_root = os.path.join(app_root, 'api')
     extension_root = os.path.join(src_project_root, 'extension')
-    # util_root = os.path.join(src_project_root, 'util')
 
     tpl2meta = {
         # files in project's base-diractory
