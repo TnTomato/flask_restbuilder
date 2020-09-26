@@ -3,6 +3,9 @@ Version 0.2.1
 
 Developing
 
+- fix setup
+- Build the project's website
+
 Version 0.2.0
 =============
 
