@@ -132,7 +132,8 @@ def main():
 1. Flask-SQLAlchemy;
 2. Flask-PyMongo;
 Input numbers, use whitespace to split''',
-              default='')
+              default='',
+              help='Some database extensions support')
 @click.option('--swagger', prompt='Need swagger support?(y/n)', default='y',
               help='Swagger support')
 def start(name, directory, modules, db, swagger):
