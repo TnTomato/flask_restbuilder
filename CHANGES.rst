@@ -4,7 +4,7 @@ Version 0.2.1
 Developing
 
 - fix setup
-- Build the project's website
+- ini file parse support
 
 Version 0.2.0
 =============
