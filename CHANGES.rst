@@ -5,6 +5,7 @@ Developing
 
 - fix setup
 - ini file parse support
+- add redis support
 
 Version 0.2.0
 =============
