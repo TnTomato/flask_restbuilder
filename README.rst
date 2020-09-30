@@ -30,7 +30,8 @@ Use command ``flask_restbuilder start`` to create a project:
     Need db support?
     1. Flask-SQLAlchemy;
     2. Flask-PyMongo;
-    Input numbers, use whitespace to split []: 1 2
+    3. Flask-Caching;
+    Input numbers, use whitespace to split []: 1 2 3
     Need swagger support?(y/n) [y]: y
 
 Follow the guidance and finish the questions below, you will get a directory
@@ -62,6 +63,7 @@ Follow the guidance and finish the questions below, you will get a directory
             │       └─ __init__.py
             └─ extension
                 ├─ __init__.py
+                ├─ cache.py
                 ├─ mongo.py
                 └─ sa.py
 
