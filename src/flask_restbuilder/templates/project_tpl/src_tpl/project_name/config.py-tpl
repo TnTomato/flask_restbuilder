@@ -49,7 +49,7 @@ class DebugConfig(BaseConfig):
     SQLALCHEMY_ECHO = True{% endif %}{% if pymongo_support %}
 
     # Flask-PyMongo settings
-    MONGO_URI = 'mongodb://localhost:27017/{{ project_name }}'{% endif %}{% if redis_needed %}
+    MONGO_URI = 'mongodb://localhost:27017/{{ project_name }}'{% endif %}{% if redis_support %}
 
     # Redis settings
     REDIS_CONFIG = {

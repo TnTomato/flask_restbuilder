@@ -193,6 +193,7 @@ def start(name, directory, modules, db, swagger):
                 'secret_key': base64.b64encode(os.urandom(24)).decode('utf-8'),
                 'sa_support': sa_support,
                 'pymongo_support': pymongo_support,
+                'redis_support': redis_support,
                 'swagger_support': swagger_support
             }
         },
