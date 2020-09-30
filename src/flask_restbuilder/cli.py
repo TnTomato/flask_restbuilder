@@ -131,6 +131,7 @@ def main():
               prompt='''Need db support?
 1. Flask-SQLAlchemy;
 2. Flask-PyMongo;
+3. Flask-Caching;
 Input numbers, use whitespace to split''',
               default='',
               help='Some database extensions support')
@@ -150,6 +151,7 @@ def start(name, directory, modules, db, swagger):
     dbs = db.split(' ')
     sa_support = True if '1' in dbs else False
     pymongo_support = True if '2' in dbs else False
+    redis_support = True if '3' in dbs else False
 
     project_root = os.path.join(directory, name)
     src_project_root = os.path.join(project_root, f'src/{name}')
@@ -236,6 +238,16 @@ def start(name, directory, modules, db, swagger):
         tpl2meta.update(
             {
                 'project_tpl/src_tpl/project_name/extension_tpl/mongo.py-tpl': {
+                    'dest': extension_root,
+                    'content': {}
+                }
+            }
+        )
+
+    if redis_support:
+        tpl2meta.update(
+            {
+                'project_tpl/src_tpl/project_name/extension_tpl/cache.py-tpl': {
                     'dest': extension_root,
                     'content': {}
                 }
