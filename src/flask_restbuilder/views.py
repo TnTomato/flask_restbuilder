@@ -53,6 +53,8 @@ class RESTful(Resource):
         # Read `args` from `parser` using `self.parse_arguments()`
         self.args = None
 
+    # TODO: simplify the process of arg parse
+
     @property
     def method(self):
         return request.method
