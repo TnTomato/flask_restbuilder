@@ -15,7 +15,7 @@ from .decorators import exception_handler
 
 
 class RESTful(Resource):
-    """A wrapper of :class:`flask_restful.Resource`. Easy to build RESTful API
+    """A wrapper of :class:`~flask_restful.Resource`. Easy to build RESTful API
     like ::
 
         class MyAPI(RESTful):
