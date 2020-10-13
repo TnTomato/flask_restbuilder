@@ -21,12 +21,10 @@ class RESTful(Resource):
         class MyAPI(RESTful):
 
             def __init__(self):
-                super(MyAPI, self).__init__()
                 if self.method == 'GET':
                     self.parser.add_argument('param', location='args')
                 else:
                     self.parser.add_argument('param', location='form')
-                self.parse_arguments()
 
             def get(self):
                 result = self.init_response(data=self.args)
@@ -41,23 +39,31 @@ class RESTful(Resource):
         api.add_resource(MyAPI, '/test', methods=['GET', 'POST'])
     """
 
+    # The request arguments.
+    args = None
+
     # Decide to use exception_handler or not. Reset method_decorators
     # in your API class as you want.
     method_decorators = [exception_handler]
 
-    def __init__(self):
-        # An instance of :class:`flask_restful.reqparse.RequestParser`,
-        # makes it easy to use in :class:`~flask_restbuilder.RESTful`
-        self.parser = reqparse.RequestParser()
-
-        # Read `args` from `parser` using `self.parse_arguments()`
-        self.args = None
-
-    # TODO: simplify the process of arg parse
+    # An instance of :class:`flask_restful.reqparse.RequestParser` with the
+    # default arguments, that makes it an easy parser.
+    parser = reqparse.RequestParser()
 
     @property
     def method(self):
         return request.method
+
+    def add_argument(self, *args, **kwargs):
+        """Add arguments to attr:`~flask_restbuilder.RESTful.parser`"""
+        self.parser.add_argument(*args, **kwargs)
+
+    def dispatch_request(self, *args, **kwargs):
+        # Rewrite method:`flask_restful.Resource.dispatch_request` to parse
+        # argument from attr:`~flask_restbuilder.RESTful.parser` the default
+        # way before handling the request.
+        self.args = self.parser.parse_args()
+        return super(RESTful, self).dispatch_request(*args, **kwargs)
 
     @classmethod
     def get_ip(cls) -> str:
@@ -70,6 +76,3 @@ class RESTful(Resource):
         if data is None:
             data = []
         return {'code': code, 'msg': msg, 'data': data}
-
-    def parse_arguments(self, req=None, strict=False, http_error_code=400):
-        self.args = self.parser.parse_args(req, strict, http_error_code)

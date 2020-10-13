@@ -6,6 +6,7 @@ Developing
 - fix setup
 - ini file parse support
 - add redis support
+- simplify the usage of class:```~flask_restbuilder.RESTful```
 
 Version 0.2.0
 =============
